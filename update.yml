@@ -1,0 +1,19 @@
+name: Auto Update Content
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update news content
+        run: |
+          echo "Content updated at $(date)" >> updates.log
+          git config user.name "Auto Bot"
+          git config user.email "bot@nijaentertainment.com"
+          git add updates.log
+          git commit -m "Auto-update: $(date)" || echo "No changes"
+          git push
