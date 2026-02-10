@@ -1,0 +1,2 @@
+# NIJAENTERTAINMENT
+Get entertained daily 
