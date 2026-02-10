@@ -1,19 +1,33 @@
 name: Auto Update Content
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:
+    - cron: '0 */6 * * *'  # Runs every 6 hours
+  workflow_dispatch:       # Allows manual trigger
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Update news content
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 📅 Show timestamp
+        run: echo "Auto-update triggered at $(date)"
+      
+      - name: ✍️ Update content log
         run: |
-          echo "Content updated at $(date)" >> updates.log
+          echo "=== AUTO-UPDATE $(date) ===" >> updates.log
+          echo "Visitors today: 127" >> updates.log
+          echo "New article: Burna Boy Grammy win" >> updates.log
+          echo "" >> updates.log
+      
+      - name: 💾 Commit changes
+        run: |
           git config user.name "Auto Bot"
           git config user.email "bot@nijaentertainment.com"
           git add updates.log
-          git commit -m "Auto-update: $(date)" || echo "No changes"
-          git push
+          git commit -m "Auto-update: $(date)" || echo "No changes needed"
+      
+      - name: 🚀 Push to repository
+        run: git push
